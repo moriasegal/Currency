@@ -29,16 +29,27 @@ var currency = {
 
 // $('section.from input').on('input', function(event) {
 $('section.from input').keyup(function(event) {
+	var ratesFrom = $('section.from select').val();
+	var ratesTo = $('section.to select').val();
+	var currentView = $('.tabs-container button.active').attr('data-view');
+	if (currentView === 'currency') {
+		getValueFromAPI(event.target.value, ratesFrom, ratesTo)
+	}
 	if (/\d+/.test(event.target.value)) {
-		$('section.to output').val(calcValue(event.target.value));
+		printResult(calcValue(event.target.value, ratesFrom, ratesTo, currentView));
 	}
 });
 
-function calcValue(value) {
-	var ratesFrom = $('section.from select').val();
-	var ratesTo = $('section.to select').val();
-
-	var currentView = $('.tabs-container button.active').attr('data-view');
-
+function calcValue(value, ratesFrom, ratesTo, currentView) {
 	return value * currency[currentView].rates[ratesFrom] / currency[currentView].rates[ratesTo];
+}
+
+function getValueFromAPI(value, ratesFrom, ratesTo) {
+	$.get('http://api.fixer.io/latest?base=' + ratesFrom + '&symbols=' + ratesTo, function(response) {
+		printResult(value * response.rates[ratesTo]);
+	});
+}
+
+function printResult(res) {
+	$('section.to output').val(res);
 }

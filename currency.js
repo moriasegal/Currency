@@ -45,7 +45,7 @@ function calcValue(value, ratesFrom, ratesTo, currentView) {
 }
 
 function getValueFromAPI(value, ratesFrom, ratesTo) {
-	$.get('http://api.fixer.io/latest?base=' + ratesFrom + '&symbols=' + ratesTo, function(response) {
+	$.get('//api.fixer.io/latest?base=' + ratesFrom + '&symbols=' + ratesTo, function(response) {
 		printResult(value * response.rates[ratesTo]);
 	});
 }
